@@ -43,3 +43,4 @@ nombre='eduardo'
 nacionalidad='cubano'
 print ((nombre is'eduardo') and (nacionalidad is 'peruano' or nacionalidad is'colombiano'))
 print ((nombre =='eduardo') and (nacionalidad == 'peruano' or nacionalidad =='colombiano'))
+
