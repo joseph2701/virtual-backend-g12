@@ -27,3 +27,24 @@ print(notas[0:3])
 #otra forma
 for posicion in range(3):
     print(notas[posicion])
+
+
+aprobados=['Pedro','Eduardo','Maria']
+for aprobado in aprobados:
+    if (aprobado=='Pedro'):
+        print('El aprobado es:',aprobado)
+        break    
+else:
+    print('ya no hay mas aprobados')
+
+
+productos=['manzanas','peras','tallarines','tazas']
+busqueda=input('Ingrse el rpoduycto a buscar:')
+
+for producto in productos:
+    if producto==busqueda:
+      print('El producto esta en la tienda')
+      break
+else:
+    print('No se encontro el producto')
+
