@@ -1,9 +1,12 @@
-from flask import Flask
+from flask import Flask,request
 from datetime import datetime
 #__name__ sirve para msotrar el archivo raiz
 # 127.0.0.1:5000
 app = Flask(__name__)
 #inicializaremos  nuestro servidor Flask
+
+clientes=[] 
+
 @app.route('/') 
 def info_app():
     #formato a fecha strftime()
@@ -14,10 +17,15 @@ def info_app():
         'Hour':hora_del_servidor.strftime("%d-%m-%Y %H:%M:%S")
     }
 
-@app.route('/clientes')
+@app.route('/clientes',methods=['POST'])
 def estado():
+    #request.method : muestra el tipo de metodo de consulta de aprte delf ront
+    print(request.method)
+    data=request.get_json()
+    clientes.append(data)
     return{
-        'mensaje':'cliente agregado exitosamente'
+        'message':'{} agregado exitosamente'.format(data.get('name', default=None)),
+        'client':data        
     }
 
 
