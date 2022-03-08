@@ -136,7 +136,7 @@ print('--------------------------------------------------------------')
 nombre='eduardo'
 
 def saludar():
-    global nombre_personanombre=nombre*2
-    print(nombre)
+    #global nombre_persona=nombre*2
+    #print(nombre_persona)
 
-saludar()
+#saludar()
