@@ -30,11 +30,11 @@ left join niveles n on an.nivel_id=n.id
 where n.nombre='Primero' and n.seccion='B';
 
 -- -----------------------------------------------------------------------------
-select * from alumnos;
-select * from niveles;
+-- select * from alumnos;
+-- select * from niveles;
 
-select an.id,an.alumnos_id,a.nombre,an.nivel_id,n.nombre,an.fecha_cursada from alumnos_niveles an
-inner join alumnos a on a.id=an.alumnos_id
-inner join niveles n on n.id=an.nivel_id;
+-- select an.id,an.alumnos_id,a.nombre,an.nivel_id,n.nombre,an.fecha_cursada from alumnos_niveles an
+-- inner join alumnos a on a.id=an.alumnos_id
+-- inner join niveles n on n.id=an.nivel_id;
 
 
