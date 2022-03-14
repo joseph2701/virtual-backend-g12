@@ -1,6 +1,6 @@
 from flask import Flask,request
 from datetime import datetime
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 #__name__ sirve para msotrar el archivo raiz
 # 127.0.0.1:5000
 app = Flask(__name__)
@@ -32,7 +32,7 @@ def buscar_cliente(id):
             return(cliente,posicion)            
     
 @app.route('/') 
-def info_app():
+def estado():
     #formato a fecha strftime()
     hora_del_servidor=datetime.now()
 
@@ -43,6 +43,8 @@ def info_app():
 
 
 @app.route('/clientes',methods=['POST','GET'])
+@cross_origin(origins=['http://127.0.0.1:7000', 'http://mipagina.com'])
+
 def obtener_clientes():
     #request.method : muestra el tipo de metodo de consulta de aprte delf ront
     print(request.method)
@@ -59,7 +61,7 @@ def obtener_clientes():
     else:
         return{
             'message':'lista de clientes',
-            'client':clientes
+            'clients':clientes
         }
 
 
