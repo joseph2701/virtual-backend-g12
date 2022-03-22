@@ -5,7 +5,8 @@ from controllers.ingredientes import (  IngredientesController,
                                         PruebaController, 
                                         IngredienteController )
 
-from controllers.recetas import RecetasController,BuscarRecetaController
+from controllers.recetas import (RecetasController,BuscarRecetaController,RecetaController)
+from controllers.preparaciones import PreparacionesController
 from config import conexion, validador
 
 app=Flask(__name__)
@@ -45,7 +46,9 @@ api.add_resource(IngredientesController,'/Ingredientes','/Ingrediente')
 api.add_resource(PruebaController, '/pruebas')
 api.add_resource(IngredienteController, '/ingrediente/<int:id>')
 api.add_resource(RecetasController, '/recetas', '/receta')
+api.add_resource(RecetaController, '/receta/<int:id>')
 api.add_resource(BuscarRecetaController, '/buscar_receta')
+api.add_resource(PreparacionesController, '/preparacion')
 
 #comprueba que solo se corra una instancia
 #en un proyecto

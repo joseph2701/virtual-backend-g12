@@ -39,6 +39,12 @@ class RecetasController(Resource):
         paginacion=PaginacionRequestDTO().load(query_params)
         perPage=paginacion.get('perPage')
         page=paginacion.get('page')        
+
+        if (perPage>1 or page<1):
+            return{
+                'message':'Los parametros no pueden reicbir los valores negativos'
+            },400
+
         skip=perPage*(page-1)
 
         recetas=conexion.session.query(Receta).limit(perPage).offset(skip).all()
@@ -96,4 +102,9 @@ class BuscarRecetaController(Resource):
                 'content':e.args
             },400
 
-            #alt + z para saltos de linea continuado
+            
+class RecetaController(Resource):
+    def get(self,id):
+        return{
+            'id':id
+        }
