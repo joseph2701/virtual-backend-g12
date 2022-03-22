@@ -47,18 +47,21 @@ class RecetasController(Resource):
         total=conexion.session.query(Receta).count()
         itemsxPage=perPage if total >=perPage else total
         totalPages=ceil(total/itemsxPage) if itemsxPage>0 else None
+        prevPage=page-1 if page>1 and page <=totalPages else None
+        nextPage = page+1 if totalPages>1 and page < totalPages else None
+
         respuesta=RecetaResponseDTO(many=True).dump(recetas)
         return{
             'message':'Las recetas son: ',
             'pagination':{
                 'total':total,
-                'items':perPage,
-                'totalPages':totalPages
+                'itemsxPage':perPage,
+                'totalPages':totalPages,
+                'prevPage':prevPage,
+                'nextPage':nextPage
             },
             'content':respuesta
         }
-
-
 
 class BuscarRecetaController(Resource):
 
