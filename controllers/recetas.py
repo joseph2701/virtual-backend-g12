@@ -1,6 +1,8 @@
 from flask_restful import Resource,request
 from models.recetas import Receta
-from dtos.receta_dto import RecetaRequestDTO,RecetaResponseDTO,BuscarRecetaRequestDTO
+from dtos.receta_dto import (RecetaRequestDTO,RecetaResponseDTO,
+                                BuscarRecetaRequestDTO,
+                                RecetaPreparacionesResponseDTO )
 from dtos.paginacion_dto import PaginacionRequestDTO
 from config import conexion
 from math import ceil
@@ -104,7 +106,19 @@ class BuscarRecetaController(Resource):
 
             
 class RecetaController(Resource):
-    def get(self,id):
-        return{
-            'id':id
-        }
+    def get(self,id):         
+        receta : Receta | None=conexion.session.query(Receta).filter_by(id=id).first()
+        #receta : Receta | None=conexion.session.query(Receta).filter(id==id).first()
+        print(receta)
+        if receta is None:
+            return {
+                'message': 'Receta no encontrada'
+            }, 404
+        else:                        
+            print(receta.preparaciones)
+            respuesta = RecetaPreparacionesResponseDTO().dump(receta)            
+            return {
+                'message':'Receta encontrada',
+                'result': respuesta
+            },200
+    
