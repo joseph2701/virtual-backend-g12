@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>Hola bienvenido a mi API de Monedero</p>
+    <p>Presentado por {{nombre}}{{edad}}</p>
+    <p>Los galacticos son: </p>
+    {# Jinja > en una libreria que renderiza html en backend como flash,django,rapify #}       
+    <ol>
+        {% for integrante in  integrantes %}
+        <li>
+            {{integrante}}
+        </li>
+        {% endfor %}
+    </ol>
+    {{ integrantes }}     
+
+    <p>El usuario es {{usuario.nombre}}</p>
+
+    <ul>
+        {% for seleccion in  selecciones %}
+        <li>
+            {{seleccion}}
+        </li>
+        {% endfor %}
+    </ul>
+    {{ selecciones }}    
+    <table border="1">
+        <tr>            
+            <th> Nombre</th>
+            <th> Clasificado</th>            
+        </tr>
+        {% for seleccion in  selecciones %}
+            <tr>            
+                <td> {{seleccion.nombre}}</td>
+                <td> 
+                    {% if seleccion.clasificado is true %} 'Nos vemos en Qatar'
+                    {% elif seleccion.clasificado is false %} 'Con suerte en el proximo'
+                    {% else %} 'Aun no se sabe'
+                    {% endif %}
+                </td>
+                <!-- <td> {{seleccion.clasificado}}</td>                 -->
+            </tr>
+        {% endfor %}    
+    </table>
+
+
+</body>
+</html>
