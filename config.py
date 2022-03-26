@@ -1,3 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-
-conexion=SQLAlchemy()
+from flask_marshmallow import Marshmallow
+conexion = SQLAlchemy()
+validador=Marshmallow()
