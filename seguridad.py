@@ -36,8 +36,5 @@ def identificador(payload):
     if usuarioEncontrado:
         print('Usuario encontrado')
         return usuarioEncontrado
-            # 'id':usuarioEncontrado.id,
-            # 'nombre':usuarioEncontrado.nombre,
-            # 'correo':usuarioEncontrado.correo
     else:
         return None
