@@ -50,19 +50,26 @@ def seed():
 
 @app.route('/')
 
-
 def inicio():
     pass
+
+@app.route('/status')
+
+def stado():
+    return{
+        'status':True,
+        'hora_del_servidor': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
 
 @app.route('/user')
 #indicamos que apra este controlador se debera proveer una JWT valida
 @jwt_required()
 def perfil_usuario():
-    print(current_identity)
+    #print(current_identity)
     #serializa el usuasrio
     usuario=UsuarioResponseDTO().dump(current_identity)
     return{
-        'message':'El usuario es: %s' % current_identity,
+        'message':'El usuario es:',# %s' % current_identity,
         'content':usuario
     }
 
@@ -96,7 +103,7 @@ def validar_token():
                         
                 }
             else:                
-                return{
+                return{  
                     'message':'Usuario no existe'
                 },400
         else:

@@ -14,12 +14,13 @@ def autenticador(username,password):
         #bsucara en la db
         usuarioEncontrado=conexion.session.query(Usuario).filter_by(correo=username).first()
         if usuarioEncontrado:
-            print('Se encontro el usuario')
+            #print('Se encontro el usuario')
             validacion=checkpw(bytes(password,'utf-8'),
             bytes(usuarioEncontrado.password,'utf-8'))
             
             if validacion is True:
-                print('si es el password')
+                #print('si es el password')
+                print('access token:',usuarioEncontrado.password)
                 return usuarioEncontrado
 
             else:
@@ -34,7 +35,7 @@ def autenticador(username,password):
 def identificador(payload):
     usuarioEncontrado:Usuario | None = conexion.session.query(Usuario).filter_by(id=payload['identity']).first()
     if usuarioEncontrado:
-        print('Usuario encontrado')
+        #print('Usuario encontrado')
         return usuarioEncontrado
     else:
         return None
