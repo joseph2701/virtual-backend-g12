@@ -16,7 +16,7 @@ from datetime import datetime
 load_dotenv() 
 import json
 from models.usuarios import Usuario
-
+from dtos import ChangePasswordRequestDTO
 app=Flask(__name__)
 CORS(app=app)
 
@@ -115,6 +115,31 @@ def validar_token():
         return{
             'message':'Token incorrecta'
         },400
+
+@app.route('/change-password-token',methods=(['POST']))
+def post(self):
+    body=request.get_json()
+    try: 
+        data=ChangePasswordRequestDTO().loads(body)
+        fernet=Fernet(environ.get('FERNET_SECRET-KEY'))
+        info_token=fernet.decrypt(bytes(data.get('token'),'utf-8').decode('utf-8'))
+        diccionario=json.loads(info_token)
+        usuarioEncontrado=conexion.session.query(Usuario).filter_by(id=diccionario.get('id_usuario')).first()
+        id=diccionario.get('id_usuario').first()
+        if usuarioEncontrado:
+            usuarioEncontrado.password=diccionario.get('password')
+            usuarioEncontrado.encriptar_pwd()
+            conexion.session.add(usuarioEncontrado)
+            conexion.session.commit()
+            return{
+                'message':'Contraseña cvambiada exitosamente'
+            }
+    except Exception as e:
+        return{
+            'message':'Error al cargar la contrseña', 
+            'content': e.args
+        }
+
 
 api.add_resource(RegistroController,'/registro')
 api.add_resource(LoginController,'/login')
