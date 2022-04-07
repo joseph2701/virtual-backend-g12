@@ -23,14 +23,17 @@ class Tareas(models.Model):
     #    https://docs.djangoproject.com/en/4.0/ref/models/fields/#field-types
     #   https://docs.djangoproject.com/en/4.0/ref/models/fields/#field-options
     class CategoriasOpciones(models.TextChoices):
+        #el primero es el nombre que se guarda en la db, y el segundo nombre
+        #son los valores que se muestran usando templates para
+        #jinga o DRF django RestFramework
         TODO='TODO','TO_DO'
         IN_PROGRESS='IP','IN_PROGRESS'
         DONE='DONE','DONE'
         CANCELLED='CANCELLED','CANCELLED'
 
     id=models.AutoField(primary_key=True)
-    nombre=models.CharField(max_length=20,unique=True,null=False)
-    categorias=models.CharField(max_length=45,choices=CategoriasOpciones.choices,default=CategoriasOpciones.TODO)
+    nombre=models.CharField(max_length=45,unique=True,null=False)
+    categoria=models.CharField(max_length=45,choices=CategoriasOpciones.choices,default=CategoriasOpciones.TODO)
 
     #OTRA FORMA USANDO TUPLAS
     # categorias=models.CharField(max_length=45,choices=[
@@ -42,7 +45,7 @@ class Tareas(models.Model):
 
     fechaCaducidad=models.DateTimeField(db_column='fecha_caducidad')
     importancia=models.IntegerField(null=False)
-    descripcion=models.TextField()
+    descripcion=models.TextField(null=True)
     #Columnas de auditoria
     #son columnas que ayudan al seguimiento de cracion de registros
     #fecha en la que se creo el registro
