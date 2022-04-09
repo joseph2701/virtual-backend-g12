@@ -7,7 +7,9 @@ class PruebaSerializer(serializers.Serializer):
     dni=serializers.RegexField(max_length=8,min_length=8,regex="[0-9]")
     #dni=serializers.IntegerField(min_value=10000000,max_value=99999999)
 
-class TareasSerializer(serializers.ModelSerializer)    :
+class TareasSerializer(serializers.ModelSerializer):
+    #esto setetea la configuracion para el serializador
+    foto=serializers.CharField(max_length=100)
     class Meta:
         model=Tareas 
         fields='__all__'
@@ -48,3 +50,29 @@ class EtiquetaSerializer(serializers.ModelSerializer):
         #asigna los campos que serean solo lectura
         read_only_fields=['createAt']
         # write_only_fields=['createAt']   NO EXISTEEEE
+
+class TareaPersonalizableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TareasSerializerfields='__all__'
+        extra_kwargs={
+            'nombre':{'read_only':True}
+        }
+
+class ArchivoSerializer(serializers.Serializer):
+    #max leng indica longitud maxima del nombre
+    #use_url si es True, retornara el link completo de la ubc del archivo
+    archivo=serializers.ImageField(max_length=100,use_url=True)
+    class Meta:
+        model=TareasSerializerfields='__all__'
+        extra_kwargs={
+            'nombre':{'read_only':True}
+        }
+
+
+class EliminarArchivoSerializer(serializers.Serializer):
+    archivo=serializers.CharField(max_length=100)
+    # class Meta:
+    #     model = TareasSerializerfields='__all__'        
+    #     def delete(self, instance, *arg, **kwargs):
+    #         profile = instance.profiles
+    #         profile.delete()

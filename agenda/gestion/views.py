@@ -1,10 +1,16 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.generics import ListAPIView,ListCreateAPIView
-from .serializers import PruebaSerializer,TareasSerializer,EtiquetaSerializer,TareaSerializer 
+from rest_framework.generics import (ListAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView,CreateAPIView,DestroyAPIView)
+from .serializers import (PruebaSerializer,TareasSerializer,EtiquetaSerializer,TareaSerializer,TareaPersonalizableSerializer,ArchivoSerializer,EliminarArchivoSerializer) 
 from .models import Tareas ,Etiqueta
 from rest_framework import status
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from os import remove
+from django.conf import settings
+
 #from datetime import datetime
 from django.utils import timezone
 
@@ -82,8 +88,10 @@ class TareasApiView(ListCreateAPIView):
                         'message':'Fecha no puede ser menor que la fecha actual'
                     },status=status.HTTP_400_BAD_REQUEST
                 )
-            else:
-                return Response(data='Registrado con exito',status=status.HTTP_201_CREATED)
+            #se puede uysar cuando el serializadoe es un modelserializer
+            #sirve para guardar en la db
+            serializador.save()
+            return Response(data=serializador.data,status=status.HTTP_201_CREATED)
         else:
             #muestra los errores
             #   serializador.errors
@@ -94,10 +102,73 @@ class TareasApiView(ListCreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-
-
-
 class EtiquetasApiView(ListCreateAPIView):
     #select * from Tareas
     queryset=Etiqueta.objects.all()  
     serializer_class=EtiquetaSerializer
+
+class TareaApiView(RetrieveUpdateDestroyAPIView):
+    #select * from Tareas    
+    serializer_class=TareaSerializer #TareaPersonalizableSerializer
+    queryset=Tareas.objects.all()
+
+class ArchivosApiView(CreateAPIView):    
+    serializer_class=ArchivoSerializer
+    def post(self,request:Request):
+        #FILES: se usa para acceder a los archivos
+        print(request.FILES)
+        #ayuda a ver como un diciconario
+        queryParams=request.query_params
+        carpetaDestino=queryParams.get('carpeta')       
+        
+        data=self.serializer_class(data=request.FILES)
+        if data.is_valid():
+            print(data.validated_data.get('archivo'))
+            archivo:InMemoryUploadedFile=data.validated_data.get('archivo')
+            print(archivo.name)
+            print(archivo.size)
+            #solamente subir imagenes hasta 5MB
+            if archivo.size>5*1024*1024:
+                return Response(
+                    data={
+                        'message':'Archivo muy grande, >5Mb'
+                    },status=status.HTTP_400_BAD_REQUEST
+                )
+
+            resultado=default_storage.save(
+                (carpetaDestino+'/' if carpetaDestino is not None else '') +archivo.name,ContentFile(archivo.read())
+            )
+
+            print(resultado)
+            return Response(data={
+                'message':'Archivo guardado exitosamente',
+                'content':{
+                    'ubicacion':resultado
+                }
+            },status=status.HTTP_201_CREATED)
+        else:
+            return Response(
+                data={'message':'Error al subir el archivo','content':data.errors},status=status.HTTP_400_BAD_REQUEST)
+
+class EliminarArchivoApiView(DestroyAPIView):
+    serializer_class=EliminarArchivoSerializer
+    def delete(self,request:Request):         
+        data=self.serializer_class(data=request.data)
+        try:
+            data.is_valid(raise_exception=True)
+            ubicacion=data.validated_data.get('archivo')   
+            #print(ubicacion)         
+            remove(settings.MEDIA_ROOT/ubicacion)
+            return Response(
+                data={
+                    'message':'Archivo eliminado exitosamente',                    
+                }
+            )            
+        except Exception as e:
+            return Response(
+                data={
+                    'message':'Error al eliminar el archivo',
+                    'content':e.args
+                },status=status.HTTP_404_NOT_FOUND
+            )
+

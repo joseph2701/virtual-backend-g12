@@ -55,7 +55,11 @@ class Tareas(models.Model):
     
     #solo se usa esta forma, cuando la tabla es de muchos a muchos y solo us foreign keys
     etiquetas=models.ManyToManyField(to=Etiqueta,related_name='tareas')
-
+    foto=models.ImageField(
+        #sirve para inidicar el url, si no existe lo crea
+        upload_to='multimedia',
+        null=True
+    )
     class Meta:
         #cambia el nombre de la tabla en la db ()
         db_table='tareas'
