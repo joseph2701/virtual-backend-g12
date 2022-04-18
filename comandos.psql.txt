@@ -1,0 +1,12 @@
+ver lista completa de comandos:
+psql -U USER -h HOST -d DATABASE -p PUERTO <coenctarse a servidor externo
+muestra las db:
+\l
+cambia la bd:
+ \c prueba
+\q termina la sesion en cmd
+
+No se puede crear aplicaciones con los nombres de las aplicaciones de Django: auth, contenttypes, message, users, admin, sessions, staticfiles
+
+https://www.postgresql.org/docs/current/app-psql.html
+\x : eprmite visualizar en vista desplegada
