@@ -21,5 +21,5 @@ class UserManager(BaseUserManager):
         usuario=self.create_user(correo,nombre,rol,password)
         #asigna que usuarios seran sa
         usuario.is_superuser=True
-        usuario.is_taff=True
-        usuario.save(using=self._db)   
+        usuario.is_staff=True
+        usuario.save(using=self._db)
