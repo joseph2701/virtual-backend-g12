@@ -1,6 +1,10 @@
-from .models import Plato
-from rest_framework.generics import ListCreateAPIView
-from .serializers import PlatoSerializer
+from .models import Plato,Stock
+from rest_framework.generics import ListCreateAPIView,CreateAPIView
+from .serializers import (  PlatoSerializer,
+                            StockSerializer,
+                            PedidoSerializer,
+                            AgregarDetallePedidoSerializer
+                        )
 from rest_framework.permissions import (AllowAny,  # sirve para que el controlador sea publico (no se necesite una token)
                                         # Los controladores soliciten una token de acceso
                                         IsAuthenticated,
@@ -13,8 +17,10 @@ from rest_framework.permissions import (AllowAny,  # sirve para que el controlad
 from rest_framework.response import Response
 from rest_framework.request import Request
 from cloudinary import CloudinaryImage
-
-
+from .permissions import SoloAdminPuedeEscribir,SoloMozoPuedeEscribir
+from fact_electr.models import Pedido,DetallePedido
+from rest_framework import status
+from django.utils import timezone
 class PlatoApiView(ListCreateAPIView):
     serializer_class = PlatoSerializer
     queryset = Plato.objects.all()
@@ -31,3 +37,46 @@ class PlatoApiView(ListCreateAPIView):
 
         print(link)
         return Response(data=data.data)
+
+class StockApiView(ListCreateAPIView):
+    serializer_class=StockSerializer
+    queryset=Stock.objects.all()
+    permission_classes=[IsAuthenticatedOrReadOnly,SoloAdminPuedeEscribir]
+
+class PedidoApiView(ListCreateAPIView):
+    queryset=Stock.objects.all()
+    serializer_class=PedidoSerializer
+    permission_classes=[IsAuthenticatedOrReadOnly,SoloMozoPuedeEscribir]
+    def post(self,request: Request):
+        print(request.user)
+        request.data['usuarioId']=request.user.id
+        data=self.serializer_class(data=request.data)
+        data.is_valid(raise_exception=True)
+        data.save()
+        return Response(data=data.data,status=status.HTTP_201_CREATED)
+
+class AgregarDetallePedidoApiView(CreateAPIView):
+    queryset=DetallePedido.objects.all()
+    serializer_class=AgregarDetallePedidoSerializer
+    def post(self,request: Request):
+        #valido la data        
+        data=self.serializer_class(data=request.data)
+        data.is_valid(raise_exception=True)
+        # {
+            # "cantidad":2,
+            # "plato":1,
+            # "pedido_id":2
+        # }
+        #verifico que tenga cantidad de productos en stock
+        #select top 1 * from stocks where fecha='...' and plato_id
+        stock=Stock.objects.filter(
+            fecha=timezone.now(),
+            platoId=data.validated_data.get('platoId')
+        ).first()
+        print(stock)
+        #agrego el detalle data=self.serializer_class(data=request.data)
+        if stock is None:                
+            return Response(data={'message':'No hay stck para este producto'},status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={'message':'Detalle creado exitosamente'},status=status.HTTP_201_CREATED)
+        # data.save()
+        # return Response(data=data.data,status=status.HTTP_201_CREATED)
