@@ -13,8 +13,10 @@ class StockSerializer(serializers.ModelSerializer):
         fields='__all__'
         model=Stock
         depth=1
-
-
+class StockCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields='__all__'
+        model=Stock
 class PedidoSerializer(serializers.ModelSerializer):
     class Meta:
         fields='__all__'
