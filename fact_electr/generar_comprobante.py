@@ -8,6 +8,19 @@ from datetime import datetime
 def generar_comprobante(tipo_de_comprobante: int,tipo_documento:str,numero_documento:str,pedido_id:int):
     """Sirve para generar un comprobante electronico ya sea Factura, Boleta, Nota de Credito de un pedidos."""
     pedido=Pedido.objects.filter(id=pedido_id).first()
+
+    #comprobando(errores posibles si no existe) forma facil haciendo 2da consulkta 
+    validacionComprobante=Comprobante.objects.filter(pedido=pedido.id).first()
+    if validacionComprobante is not None:
+        raise Exception('Este pedido ya tiene un comprobante')
+    
+    #forma de comprobar sin hacer una segunda consulta, usa related names
+    # try:
+    #     if pedido.comprobante is not None:
+    #         raise Exception('Este pedido ya tiene un comprobante')
+    # except Pedido.comprobante.RelatedObjectDoesNotExist:
+    #     pass
+
     if pedido is None:
         raise Exception('Pedido no existe')
 
@@ -34,11 +47,11 @@ def generar_comprobante(tipo_de_comprobante: int,tipo_documento:str,numero_docum
 
     #select * from comprobantes where tipo='boleta | 'factura' order by numero desc
     ultimoComprobante=Comprobante.objects.values_list('numero','serie').filter(tipo=tipo).order_by('-numero').first()
-
+    print(ultimoComprobante)
     if ultimoComprobante is None:
         numero=12
     else:
-        numero=int(ultimoComprobante[0]+1)
+        numero=int(ultimoComprobante[0])+1
     
     if tipo_documento is None:
         cliente_tipo_de_documento='-'

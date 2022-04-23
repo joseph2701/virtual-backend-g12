@@ -13,7 +13,7 @@ class GenerarComprobanteApiView(CreateAPIView):
         try:
             comprobante=generar_comprobante(**data.validated_data)
             respuesta=ComprobanteSerializer(instance=comprobante)
-            return Response(data={'message': 'Comprobante creado exitosamente'}, status=201)
+            return Response(data={'message': 'Comprobante creado exitosamente','content':respuesta.data}, status=201)
 
         except Exception as e:
             return Response(data={'message': 'Error al crear el comprobante', 'content': e.args})

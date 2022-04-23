@@ -21,10 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_p6!^w5)9c)$*t2k(%q@#^*3)v-j!f%@(ene9uq^o@&$#a-n@$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+#modo PRODUCCION
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+#se completa cuando se usa el modo PRODUCCION
+ALLOWED_HOSTS = ['http://localhost','127.0.0.1']
 
 # Application definition
 
@@ -35,16 +37,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #librerias
     'rest_framework',
     'cloudinary',
+    #aplicaciones
+    'corsheaders',
     'autorizacion',
     'fact_electr',
     'menu'    
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE = [    
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    #agrege el middleware de los cors
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -151,3 +159,16 @@ cloudinary.config(
     api_secret=environ.get('CLOUDINARY_SECRET')
 )
 
+#sirve para indicar de donde cargar als configuraciones y estilos de archivos estaticos
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+#SE USA CUANDO EJECUTAMOS:: python.manage.py collectstatic
+STATIC_ROOT=BASE_DIR/'staticfiles'
+
+#configuirando cors 
+#origenes permitidos, si queremos todos: CORS_ALLOWED_ORIGINS_ALL
+CORS_ALLOWED_ORIGINS = ['http://127.0.0.1:5500']
+#metodos permitidos
+CORS_ALLOWED_METHODS = ['GET','POST']
+#cabeceras permitidas
+CORS_ALLOWED_HEADERS = ['content-type','authorization','origin']
