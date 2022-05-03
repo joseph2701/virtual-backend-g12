@@ -1,5 +1,10 @@
+
 import express,{json} from "express";
+import {pedidosRouter} from "./routes/pedidos.routes.js";
 import {productosRouter} from "./routes/productos.routes.js";
+import {usuariosRouter} from "./routes/usuarios.routes.js";
+import {detallePedidoRouter} from "./routes/detallePedido.routes.js";
+
 const app=express();
 
 app.use(json());
@@ -17,6 +22,9 @@ app.get("/",(req,res)=>{
 
 //agregamos un bloque de rutas agregado en otro archivo
 app.use(productosRouter);
+app.use(usuariosRouter);
+app.use(pedidosRouter);
+app.use(detallePedidoRouter);
 
 app.listen(PORT,() =>{
     console.log(`servidor corriendo exitosamente en el puerto  ${PORT}`);
