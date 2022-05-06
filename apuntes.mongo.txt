@@ -1,0 +1,22 @@
+db => mostrartra la base actualizar
+use NOMBRE_BD => nos movemos a una db si no existe la crea
+//tabla usuarios
+db.usuarios.insertOne({nombre:'joseph',edad:28,ciudad:'AREQUIPA',donador:true}) > inserta sin encesidad de crear columnas
+
+db.usuarios.findOne()
+db.usuarios.findAndModify()
+db.usuarios.findOneAndDelete()
+db.productos.find()
+
+
+
+https://www.mongodb.com/docs/manual/reference/operator/query/
+db.productos.find({"nombre": /x/ }) > en cualquier aprte la x
+db.productos.find({"nombre": /x }) > comeinza con la x
+db.productos.find({"nombre": x/ }) > termina con la x
+ db.productos.find({"precio": {$lte:5} }) precio<5
+
+https://www.npmjs.com/package/morgan
+https://mongoosejs.com/docs/schematypes.html
+
+
