@@ -1,5 +1,6 @@
 import {Usuario} from '../models/usuarios.models.js';
 import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const registrarUsuario=async (req,res)=>{   
         const data=req.body
@@ -15,6 +16,7 @@ export const registrarUsuario=async (req,res)=>{
 
             //forma 2 de eliminar un atributo del JSON
             delete nuevoUsuario["_doc"]["password"];
+
 
             return res.status(201).json({
                 message:"Usuario crado exitosamente",
@@ -43,9 +45,13 @@ export const   login = async (req,res)=>{
     
     //valida su pwd
     if (bcryptjs.compareSync(data.password,usuarioEncontrado.password)){
+        const token=jwt.sign( { _id:usuarioEncontrado._id }, process.env.JWT_SECRET, {  expiresIn:"1h", } );
+        
         return res .json({
             message:"Bienvenidos",
+            content: token,
         });
+
     }else{
         return res.status(400).json({
             message:"Credenciales incorrectas",

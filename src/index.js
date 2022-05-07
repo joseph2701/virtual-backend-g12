@@ -2,7 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import {usuarioRouter} from "./routes/usuarios.routes.js";
-
+import {libroRouter} from './routes/libros.routes.js';
 const app=express();
 // const logger=morgan("combined");
 const logger=morgan("dev");
@@ -11,6 +11,8 @@ const logger=morgan("dev");
 app.use(logger);
 app.use(express.json())
 app.use(usuarioRouter)
+app.use(libroRouter)
+
 const PORT=process.env.PORT ?? 3000;
 
 mongoose
